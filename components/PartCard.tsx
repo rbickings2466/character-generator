@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { GeneratedPart } from '../types';
 import { PART_DISPLAY_NAMES, VIEW_DISPLAY_NAMES } from '../constants/bodyParts';
 
@@ -9,6 +9,8 @@ interface PartCardProps {
 }
 
 export const PartCard: React.FC<PartCardProps> = memo(function PartCard({ part, onRetry, onClick }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   const statusStyles: Record<string, string> = {
     pending: 'bg-slate-800 border-slate-700',
     generating: 'bg-slate-800 border-blue-500 animate-pulse',
@@ -36,16 +38,37 @@ export const PartCard: React.FC<PartCardProps> = memo(function PartCard({ part, 
       className={`relative aspect-square rounded-lg border-2 overflow-hidden transition-all ${part.status === 'complete' ? 'cursor-pointer' : ''} ${statusStyles[part.status]}`}
       onClick={part.status === 'complete' ? onClick : undefined}
       onKeyDown={part.status === 'complete' ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick?.(); } : undefined}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       role={part.status === 'complete' ? 'button' : undefined}
       tabIndex={part.status === 'complete' ? 0 : undefined}
       aria-label={part.status === 'complete' ? `View ${partLabel}` : `${partLabel} - ${part.status}`}
     >
       {part.status === 'complete' && (part.transparentUrl || part.imageUrl) ? (
-        <img
-          src={part.transparentUrl || part.imageUrl || ''}
-          alt={`${PART_DISPLAY_NAMES[part.bodyPart]} - ${VIEW_DISPLAY_NAMES[part.viewAngle]}`}
-          className="w-full h-full object-contain p-1 bg-slate-900"
-        />
+        <>
+          <img
+            src={part.transparentUrl || part.imageUrl || ''}
+            alt={`${PART_DISPLAY_NAMES[part.bodyPart]} - ${VIEW_DISPLAY_NAMES[part.viewAngle]}`}
+            className="w-full h-full object-contain p-1 bg-slate-900"
+          />
+          {/* Regenerate overlay on hover */}
+          {isHovered && onRetry && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center transition-opacity">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRetry();
+                }}
+                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium rounded-md flex items-center gap-1.5 transition-colors"
+                aria-label={`Regenerate ${partLabel}`}
+              >
+                <i className="fas fa-rotate" aria-hidden="true"></i>
+                Regenerate
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center gap-2 p-2">
           {statusIcons[part.status]}

@@ -48,6 +48,19 @@ export const cachePart = (
   }
 };
 
+// Clear a single cached part (for regeneration)
+export const clearCachedPart = (
+  attrs: MohoCharacterAttributes,
+  partKey: PartViewKey
+): void => {
+  try {
+    const key = buildCacheKey(attrs, partKey);
+    sessionStorage.removeItem(key);
+  } catch {
+    // Fail silently
+  }
+};
+
 // Clear all cached parts for a character
 export const clearCharacterCache = (attrs: MohoCharacterAttributes): void => {
   try {

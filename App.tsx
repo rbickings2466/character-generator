@@ -5,6 +5,7 @@ import { removeBackground } from './services/imageProcessor';
 import { useGenerationWorkflow } from './hooks/useGenerationWorkflow';
 import { parsePartViewKey } from './constants/bodyParts';
 import { logger } from './utils/logger';
+import { clearCachedPart } from './utils/cache';
 import { Button } from './components/Button';
 import { CharacterForm } from './components/CharacterForm';
 import { PartGrid } from './components/PartGrid';
@@ -98,6 +99,9 @@ const App: React.FC = () => {
   const handleRetryPart = useCallback(async (key: PartViewKey) => {
     if (!state.referenceSheet) return;
 
+    // Clear cached version so we get a fresh generation
+    clearCachedPart(state.character, key);
+
     actions.retryPart(key);
     const { bodyPart, viewAngle } = parsePartViewKey(key);
 
@@ -127,7 +131,7 @@ const App: React.FC = () => {
       {/* Header */}
       <header className="w-full max-w-7xl mb-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-indigo-500">
             Moho Animation Asset Generator
           </h1>
           <p className="text-slate-400 mt-1">
@@ -228,7 +232,7 @@ const App: React.FC = () => {
 
           {/* Parts Grid */}
           {state.overallStatus === 'idle' ? (
-            <div className="bg-slate-900 rounded-2xl border-2 border-dashed border-slate-800 p-12 flex flex-col items-center justify-center min-h-[400px]">
+            <div className="bg-slate-900 rounded-2xl border-2 border-dashed border-slate-800 p-12 flex flex-col items-center justify-center min-h-100">
               <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
                 <i className="fas fa-puzzle-piece text-slate-600 text-3xl" aria-hidden="true"></i>
               </div>
