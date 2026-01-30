@@ -8,6 +8,7 @@ import {
   ReferenceSheet
 } from '../types';
 import { ALL_PART_VIEW_KEYS, parsePartViewKey } from '../constants/bodyParts';
+import { API_CONFIG } from '../constants/api';
 
 const createInitialParts = (): Map<PartViewKey, GeneratedPart> => {
   const parts = new Map<PartViewKey, GeneratedPart>();
@@ -46,7 +47,7 @@ const createInitialState = (): GenerationSession => ({
   referenceSheet: null,
   parts: createInitialParts(),
   overallStatus: 'idle',
-  progress: { total: 24, completed: 0, failed: 0 },
+  progress: { total: API_CONFIG.TOTAL_PARTS, completed: 0, failed: 0 },
   createdAt: 0
 });
 
@@ -111,7 +112,7 @@ const workflowReducer = (
       const failed = Array.from(parts.values())
         .filter(p => p.status === 'error').length;
 
-      const allDone = completed + failed === 24;
+      const allDone = completed + failed === API_CONFIG.TOTAL_PARTS;
 
       return {
         ...state,
@@ -137,7 +138,7 @@ const workflowReducer = (
       const failed = Array.from(parts.values())
         .filter(p => p.status === 'error').length;
 
-      const allDone = completed + failed === 24;
+      const allDone = completed + failed === API_CONFIG.TOTAL_PARTS;
 
       return {
         ...state,

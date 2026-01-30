@@ -5,8 +5,8 @@ export const API_CONFIG = {
   RETRY_DELAY_MS: 3000,
   REQUEST_DELAY_MS: 2000,
 
-  // Total parts to generate
-  TOTAL_PARTS: 24,
+  // Total parts to generate (14 body parts × 4 views)
+  TOTAL_PARTS: 56,
 
   // Download configuration
   DOWNLOAD_STAGGER_MS: 200,

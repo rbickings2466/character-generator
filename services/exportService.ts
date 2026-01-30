@@ -16,10 +16,18 @@ const getFilename = (
       const spinePartNames: Record<BodyPart, string> = {
         head: 'head',
         torso: 'torso',
-        leftArm: 'arm-left',
-        rightArm: 'arm-right',
-        leftLeg: 'leg-left',
-        rightLeg: 'leg-right'
+        leftUpperArm: 'upper-arm-left',
+        leftLowerArm: 'lower-arm-left',
+        leftHand: 'hand-left',
+        rightUpperArm: 'upper-arm-right',
+        rightLowerArm: 'lower-arm-right',
+        rightHand: 'hand-right',
+        leftUpperLeg: 'upper-leg-left',
+        leftLowerLeg: 'lower-leg-left',
+        leftFoot: 'foot-left',
+        rightUpperLeg: 'upper-leg-right',
+        rightLowerLeg: 'lower-leg-right',
+        rightFoot: 'foot-right'
       };
       return `${spinePartNames[part]}-${view}.png`;
     default:
@@ -119,7 +127,7 @@ const generateMetadata = (
     characterName,
     exportedAt: new Date().toISOString(),
     format: 'Moho/Anime Studio',
-    totalParts: 24,
+    totalParts: API_CONFIG.TOTAL_PARTS,
     completedParts: Array.from(parts.values()).filter(p => p.status === 'complete').length,
     parts: Array.from(parts.values())
       .filter(p => p.status === 'complete')
@@ -139,10 +147,18 @@ const getSuggestedBoneName = (part: BodyPart): string => {
   const boneNames: Record<BodyPart, string> = {
     head: 'bone_head',
     torso: 'bone_body',
-    leftArm: 'bone_arm_L',
-    rightArm: 'bone_arm_R',
-    leftLeg: 'bone_leg_L',
-    rightLeg: 'bone_leg_R'
+    leftUpperArm: 'bone_upper_arm_L',
+    leftLowerArm: 'bone_lower_arm_L',
+    leftHand: 'bone_hand_L',
+    rightUpperArm: 'bone_upper_arm_R',
+    rightLowerArm: 'bone_lower_arm_R',
+    rightHand: 'bone_hand_R',
+    leftUpperLeg: 'bone_upper_leg_L',
+    leftLowerLeg: 'bone_lower_leg_L',
+    leftFoot: 'bone_foot_L',
+    rightUpperLeg: 'bone_upper_leg_R',
+    rightLowerLeg: 'bone_lower_leg_R',
+    rightFoot: 'bone_foot_R'
   };
   return boneNames[part];
 };

@@ -135,7 +135,7 @@ const App: React.FC = () => {
             Moho Animation Asset Generator
           </h1>
           <p className="text-slate-400 mt-1">
-            Generate 24 animation-ready body parts with transparent backgrounds
+            Generate 56 Moho-ready body parts with transparent backgrounds
           </p>
         </div>
         {state.overallStatus !== 'idle' && (
@@ -238,8 +238,8 @@ const App: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-slate-300">Ready to Generate</h3>
               <p className="text-slate-500 mt-2 text-center max-w-md">
-                Configure your character on the left and click generate. You'll get 24 separate body parts
-                (head, torso, arms, legs) in 4 views each (front, side, 3/4, back).
+                Configure your character on the left and click generate. You'll get 56 Moho-ready body parts
+                (head, torso, upper/lower arms, hands, upper/lower legs, feet) in 4 views each.
               </p>
               <div className="mt-6 grid grid-cols-4 gap-2 text-xs text-slate-500">
                 <span className="text-center">Front</span>

@@ -14,8 +14,22 @@ export interface GenerationResult {
   timestamp: number;
 }
 
-// Body part identifiers
-export type BodyPart = 'head' | 'torso' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg';
+// Body part identifiers (Moho-ready: upper/lower segments for proper rigging)
+export type BodyPart =
+  | 'head'
+  | 'torso'
+  | 'leftUpperArm'
+  | 'leftLowerArm'
+  | 'leftHand'
+  | 'rightUpperArm'
+  | 'rightLowerArm'
+  | 'rightHand'
+  | 'leftUpperLeg'
+  | 'leftLowerLeg'
+  | 'leftFoot'
+  | 'rightUpperLeg'
+  | 'rightLowerLeg'
+  | 'rightFoot';
 
 // View angles
 export type ViewAngle = 'front' | 'side' | 'threeQuarter' | 'back';
