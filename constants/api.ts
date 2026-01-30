@@ -18,8 +18,8 @@ export const API_CONFIG = {
 // Gemini model identifiers
 export const GEMINI_MODELS = {
   CHARACTER_SHEET: 'gemini-2.5-flash-image',
-  REFERENCE_SHEET: 'gemini-2.0-flash-exp',
-  BODY_PART: 'gemini-2.0-flash-exp',
+  REFERENCE_SHEET: 'gemini-2.5-flash-image',
+  BODY_PART: 'gemini-2.5-flash-image',
 } as const;
 
 // Image processing constants

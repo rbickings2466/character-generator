@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { MohoCharacterAttributes, BodyPart, ViewAngle, ReferenceSheet, PartViewKey } from "../types";
 import { buildReferencePrompt, buildPartPrompt } from "../utils/prompts";
 import { ALL_PART_VIEW_KEYS, parsePartViewKey } from "../constants/bodyParts";
-import { API_CONFIG } from "../constants/api";
+import { API_CONFIG, GEMINI_MODELS } from "../constants/api";
 import { logger } from "../utils/logger";
 import { compressImage } from "./imageProcessor";
 import { getCachedPart, cachePart } from "../utils/cache";
@@ -66,10 +66,10 @@ export const generateReferenceSheet = async (
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: GEMINI_MODELS.REFERENCE_SHEET,
       contents: { parts: [{ text: prompt }] },
       config: {
-        responseModalities: ['image', 'text']
+        responseModalities: ['IMAGE', 'TEXT']
       }
     });
 
@@ -102,7 +102,7 @@ export const generateBodyPart = async (
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: GEMINI_MODELS.BODY_PART,
       contents: {
         parts: [
           {
@@ -115,7 +115,7 @@ export const generateBodyPart = async (
         ]
       },
       config: {
-        responseModalities: ['image', 'text']
+        responseModalities: ['IMAGE', 'TEXT']
       }
     });
 
