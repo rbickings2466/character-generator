@@ -35,7 +35,11 @@ let aiClient: GoogleGenAI | null = null;
 
 const getAIClient = (): GoogleGenAI => {
   if (!aiClient) {
-    aiClient = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+    if (!apiKey) {
+      logger.error('VITE_GEMINI_API_KEY is not set in the environment');
+    }
+    aiClient = new GoogleGenAI({ apiKey });
   }
   return aiClient;
 };
