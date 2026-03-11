@@ -12,7 +12,7 @@ const getFilename = (
   switch (naming) {
     case 'moho':
       return getMohoFilename(part, view);
-    case 'spine':
+    case 'spine': {
       const spinePartNames: Record<BodyPart, string> = {
         head: 'head',
         torso: 'torso',
@@ -30,6 +30,7 @@ const getFilename = (
         rightFoot: 'foot-right'
       };
       return `${spinePartNames[part]}-${view}.png`;
+    }
     default:
       return `${part}_${view}.png`;
   }
