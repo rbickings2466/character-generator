@@ -84,10 +84,10 @@ export interface GenerationSession {
   createdAt: number;
 }
 
-// Export configuration
 export interface ExportConfig {
   format: 'individual' | 'zip';
   naming: 'moho' | 'spine' | 'custom';
+  exportType: 'png' | 'svg' | 'both';
   includeReference: boolean;
 }
 

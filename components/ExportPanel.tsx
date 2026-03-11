@@ -19,6 +19,7 @@ export const ExportPanel: React.FC<ExportPanelProps> = ({
   const [config, setConfig] = useState<ExportConfig>({
     format: 'zip',
     naming: 'moho',
+    exportType: 'png',
     includeReference: true
   });
   const [isExporting, setIsExporting] = useState(false);
@@ -41,7 +42,7 @@ export const ExportPanel: React.FC<ExportPanelProps> = ({
     completedParts.forEach((part, index) => {
       // Stagger downloads to avoid browser blocking
       setTimeout(() => {
-        downloadPart(part, config.naming);
+        downloadPart(part, config);
       }, index * 200);
     });
   };
@@ -73,6 +74,30 @@ export const ExportPanel: React.FC<ExportPanelProps> = ({
                 aria-label={`${option.charAt(0).toUpperCase() + option.slice(1)} naming convention`}
               >
                 {option.charAt(0).toUpperCase() + option.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">
+            File Type
+          </label>
+          <div className="flex gap-2" role="group" aria-label="Export file type">
+            {(['png', 'svg', 'both'] as const).map(option => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setConfig({ ...config, exportType: option })}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all uppercase ${
+                  config.exportType === option
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                }`}
+                aria-pressed={config.exportType === option}
+                aria-label={`Export as ${option}`}
+              >
+                {option}
               </button>
             ))}
           </div>

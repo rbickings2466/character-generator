@@ -2,6 +2,8 @@ import JSZip from 'jszip';
 import { GeneratedPart, ExportConfig, BodyPart, ViewAngle } from '../types';
 import { getMohoFilename } from '../constants/bodyParts';
 import { API_CONFIG } from '../constants/api';
+import { traceToSVG } from '../utils/svgTracer';
+import { logger } from '../utils/logger';
 
 // Get filename based on naming convention
 const getFilename = (
@@ -37,18 +39,38 @@ const getFilename = (
 };
 
 // Download a single part
-export const downloadPart = (part: GeneratedPart, naming: ExportConfig['naming'] = 'moho'): void => {
+export const downloadPart = async (part: GeneratedPart, config: ExportConfig): Promise<void> => {
   const imageUrl = part.transparentUrl || part.imageUrl;
   if (!imageUrl) return;
 
-  const filename = getFilename(part.bodyPart, part.viewAngle, naming);
+  const getBaseName = (filename: string) => filename.substring(0, filename.lastIndexOf('.'));
+  const pngFilename = getFilename(part.bodyPart, part.viewAngle, config.naming);
+  const baseName = getBaseName(pngFilename);
 
-  const link = document.createElement('a');
-  link.href = imageUrl;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const downloadFile = (href: string, filename: string) => {
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  if (config.exportType === 'png' || config.exportType === 'both') {
+    downloadFile(imageUrl, pngFilename);
+  }
+
+  if (config.exportType === 'svg' || config.exportType === 'both') {
+    try {
+      const svgString = await traceToSVG(imageUrl);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+      downloadFile(svgUrl, `${baseName}.svg`);
+      URL.revokeObjectURL(svgUrl);
+    } catch (e) {
+      logger.error('Failed to generate SVG for download', e);
+    }
+  }
 };
 
 // Create ZIP archive with all parts
@@ -95,9 +117,21 @@ export const exportAsZip = async (
     if (!viewFolder) continue;
 
     const filename = getFilename(part.bodyPart, part.viewAngle, config.naming);
+    const getBaseName = (fname: string) => fname.substring(0, fname.lastIndexOf('.'));
+    const baseName = getBaseName(filename);
     const imageData = imageUrl.split(',')[1];
-    if (imageData) {
+
+    if (imageData && (config.exportType === 'png' || config.exportType === 'both')) {
       viewFolder.file(filename, imageData, { base64: true });
+    }
+
+    if (config.exportType === 'svg' || config.exportType === 'both') {
+      try {
+        const svgString = await traceToSVG(imageUrl);
+        viewFolder.file(`${baseName}.svg`, svgString);
+      } catch (error) {
+        logger.error(`Failed to generate SVG for ${baseName}`, error);
+      }
     }
   }
 
